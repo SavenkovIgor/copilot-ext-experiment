@@ -10,12 +10,22 @@
     "Other"
   ],
   "activationEvents": [],
+  "extensionDependencies": [
+    "github.copilot-chat"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "copilot-ext-experiment.helloWorld",
         "title": "Hello World"
+      }
+    ],
+    "chatParticipants": [
+      {
+        "id": "vscode-chat-experiment",
+        "name": "experiment",
+        "description": "This is a chat participant for the VS Code Chat Experiment extension."
       }
     ]
   },

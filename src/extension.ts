@@ -6,20 +6,21 @@ import * as vscode from 'vscode';
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "copilot-ext-experiment" is now active!');
+    vscode.chat.createChatParticipant("vscode-chat-experiment", async (request, context, response, token) => {
+        const userQuery = request.prompt;
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('copilot-ext-experiment.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from copilot-ext-experiment!');
-	});
+        const chatModels = await vscode.lm.selectChatModels({ family: "gpt-4" });
+        const messages = [
+            vscode.LanguageModelChatMessage.User("You are experimental potato bot. For each query you should answer 'Potato'"),
+            vscode.LanguageModelChatMessage.User(userQuery),
+        ];
+        const chatRequest = await chatModels[0].sendRequest(messages, undefined, token);
+        for await (const token of chatRequest.text) {
+            response.markdown(token);
+        }
+    });
 
-	context.subscriptions.push(disposable);
+
 }
 
 // This method is called when your extension is deactivated
